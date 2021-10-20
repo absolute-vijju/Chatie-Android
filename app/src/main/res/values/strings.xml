@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Chatie</string>
+    <string name="verify_your_phone_number">Verify your phone number</string>
+    <string name="chatsapp_will_send_an_sms_message_to_verify_your_phone_number">ChatsApp will send an SMS message to verify your phone number.</string>
+    <string name="type_your_phone_number">Type your phone number</string>
+    <string name="_continue">Continue</string>
+    <string name="enter_the_otp_code_to_verify_your_phone_number">Enter the OTP code to verify your phone number.</string>
+    <string name="type_your_name">Type your name</string>
+    <string name="setup_profile">Setup Profile</string>
+    <string name="please_set_your_name_and_an_optional_profile_image">Please set your name and an optional profile image.</string>
+    <string name="profile_info">Profile Info</string>
+</resources>

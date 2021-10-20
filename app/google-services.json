@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "894723016101",
+    "project_id": "chatie-fa848",
+    "storage_bucket": "chatie-fa848.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894723016101:android:62d90757dc923308d9d44c",
+        "android_client_info": {
+          "package_name": "com.developer.vijay.chatie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "894723016101-va2ttr05694lbdi93ut8sfeekvvoi7pr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.developer.vijay.chatie",
+            "certificate_hash": "576acf1e4ec17166dd6cfcc6bfba1d3b343a0315"
+          }
+        },
+        {
+          "client_id": "894723016101-hj2vt38t872mgfdsgenq3fjtd8jtrvp9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj16OvXeHX67_02Ew7msf5tqdECGYMeDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894723016101-hj2vt38t872mgfdsgenq3fjtd8jtrvp9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

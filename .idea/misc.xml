@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/textbox_outline.xml" value="0.35625" />
+        <entry key="app/src/main/res/font/roboto_light.xml" value="0.3703125" />
+        <entry key="app/src/main/res/layout/activity_chat.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_group_chat.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_otp.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_phone_number.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/activity_setup_profile.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/demo_layout.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/demo_status.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/dialog_progress.xml" value="0.33487179487179486" />
+        <entry key="app/src/main/res/layout/item_conversation.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_receive.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_sent.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_status.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/row_conversation.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/menu/topmenu.xml" value="0.34010416666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
