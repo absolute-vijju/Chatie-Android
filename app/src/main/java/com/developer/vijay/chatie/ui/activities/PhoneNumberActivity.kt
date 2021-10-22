@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.developer.vijay.chatie.databinding.ActivityPhoneNumberBinding
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
+import com.developer.vijay.chatie.ui.activities.otp.OtpActivity
 import com.developer.vijay.chatie.utils.BaseActivity
 
 class PhoneNumberActivity : BaseActivity() {

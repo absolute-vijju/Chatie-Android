@@ -1,32 +1,16 @@
 package com.developer.vijay.chatie.ui.activities.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.developer.vijay.chatie.R
-import com.developer.vijay.chatie.databinding.ItemConversationBinding
 import com.developer.vijay.chatie.databinding.ItemStatusBinding
-import com.developer.vijay.chatie.models.User
-import com.developer.vijay.chatie.utils.BaseActivity
 import com.developer.vijay.chatie.utils.GeneralFunctions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
-import omari.hamza.storyview.model.MyStory
-import java.text.SimpleDateFormat
-import java.util.*
-import omari.hamza.storyview.callback.StoryClickListeners
-
 import omari.hamza.storyview.StoryView
+import omari.hamza.storyview.callback.StoryClickListeners
+import omari.hamza.storyview.model.MyStory
+import java.util.*
 
-
-class StatusAdapter(val onClick: (position: Int) -> Unit) :
+class StatusAdapter :
     RecyclerView.Adapter<StatusAdapter.StatusViewHolder>() {
 
     private var userStatuses = arrayListOf<UserStatus>()

@@ -1,15 +1,13 @@
-package com.developer.vijay.chatie.ui.activities
+package com.developer.vijay.chatie.ui.activities.otp
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.developer.vijay.chatie.databinding.ActivityOtpBinding
+import com.developer.vijay.chatie.ui.activities.SetupProfileActivity
 import com.developer.vijay.chatie.utils.BaseActivity
 import com.developer.vijay.chatie.utils.Constants
 import com.developer.vijay.chatie.utils.showToast
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider

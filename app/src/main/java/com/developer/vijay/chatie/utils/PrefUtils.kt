@@ -21,4 +21,12 @@ object PrefUtils {
         return Gson().fromJson(sharedPreferences.getString(Constants.USER, ""), User::class.java)
     }
 
+    fun set(key: String, value: String) {
+        sharedPreferences.edit().putString(key, value).apply()
+    }
+
+    fun get(key: String, defaultValue: String) {
+        sharedPreferences.getString(key, defaultValue)
+    }
+
 }

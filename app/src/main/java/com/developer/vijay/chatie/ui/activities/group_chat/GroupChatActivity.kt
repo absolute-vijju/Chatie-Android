@@ -1,16 +1,17 @@
-package com.developer.vijay.chatie.ui.activities.chat
+package com.developer.vijay.chatie.ui.activities.group_chat
 
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.*
-import com.developer.vijay.chatie.databinding.ActivityChatBinding
+import com.developer.vijay.chatie.databinding.ActivityGroupChatBinding
 import com.developer.vijay.chatie.models.User
+import com.developer.vijay.chatie.ui.activities.chat.Message
+import com.developer.vijay.chatie.ui.activities.chat.MessageAdapter
 import com.developer.vijay.chatie.utils.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,24 +19,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
-import java.text.DateFormat
 import java.text.DecimalFormat
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatActivity : BaseActivity() {
+class GroupChatActivity : BaseActivity() {
 
-    private val mBinding by lazy { ActivityChatBinding.inflate(layoutInflater) }
-    private val messageAdapter by lazy { MessageAdapter() }
+    private val mBinding by lazy { ActivityGroupChatBinding.inflate(layoutInflater) }
+    private val groupMessageAdapter by lazy { GroupMessageAdapter() }
     private val messageList = arrayListOf<Message>()
 
-    private var senderRoom = ""
-    private var receiverRoom = ""
-
     private var currentUser: User? = null
-    private var receiverUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +36,6 @@ class ChatActivity : BaseActivity() {
 
         supportActionBar?.hide()
 
-        receiverUser = Gson().fromJson(intent.getStringExtra(Constants.USER), User::class.java)
         currentUser = PrefUtils.getUser()
 
         if (currentUser == null) {
@@ -51,50 +43,16 @@ class ChatActivity : BaseActivity() {
             return
         }
 
-        if (receiverUser == null) {
-            showToast("Can't find RECEIVER.")
-            return
-        }
-
-        firebaseDatabase.reference.child(FirebaseUtils.PRESENCE).child(receiverUser!!.uid).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.getValue(Long::class.java)?.let {
-                    if (it == 0L)
-                        mBinding.tvStatus.text = "online"
-                    else if (it == 1L)
-                        mBinding.tvStatus.text = "typing..."
-                    else {
-                        val calendar = Calendar.getInstance()
-                        val numberFormat = DecimalFormat("#00")
-                        calendar.timeInMillis = it
-                        val day = calendar.get(Calendar.DAY_OF_WEEK)
-                        val hour = calendar.get(Calendar.HOUR)
-                        val minute = calendar.get(Calendar.MINUTE)
-                        val amPM = calendar.get(Calendar.AM_PM)
-                        mBinding.tvStatus.text = "last seen ${GeneralFunctions.getDay(day)} at ${GeneralFunctions.getHour(hour)}:${numberFormat.format(minute)} ${GeneralFunctions.getAmPm(amPM)}"
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
-
-        senderRoom = currentUser!!.uid + receiverUser!!.uid
-        receiverRoom = receiverUser!!.uid + currentUser!!.uid
-
-        mBinding.tvName.text = receiverUser!!.name
-
-        GeneralFunctions.loadImage(this, receiverUser!!.profileImage, mBinding.ivProfilePic)
+        GeneralFunctions.loadImage(this, "https://www.vippng.com/png/detail/12-126390_png-file-svg-group-chat-transparent.png", mBinding.ivProfilePic)
 
         mBinding.rvChats.apply {
-            layoutManager = LinearLayoutManager(this@ChatActivity)
-            adapter = messageAdapter
+            layoutManager = LinearLayoutManager(this@GroupChatActivity)
+            adapter = groupMessageAdapter
         }
-        messageAdapter.setData(messageList, senderRoom, receiverRoom)
 
-        getChildValues(FirebaseUtils.CHATS, senderRoom, FirebaseUtils.MESSAGES) { snapshot ->
+        groupMessageAdapter.setData(messageList)
+
+        getChildValues(FirebaseUtils.PUBLIC) { snapshot ->
 
             messageList.clear()
             for (children in snapshot.children) {
@@ -103,7 +61,7 @@ class ChatActivity : BaseActivity() {
                 message?.let { messageList.add(it) }
             }
 
-            messageAdapter.setData(messageList, senderRoom, receiverRoom)
+            groupMessageAdapter.setData(messageList)
 
             if (messageList.isNotEmpty())
                 mBinding.rvChats.scrollToPosition(messageList.size - 1)
@@ -155,7 +113,7 @@ class ChatActivity : BaseActivity() {
 
     private fun sendImageMessage(message: Message, imageUri: Uri) {
 
-        val reference = firebaseStorage.reference.child("Chats").child(Calendar.getInstance().timeInMillis.toString())
+        val reference = firebaseStorage.reference.child("GroupChats").child(Calendar.getInstance().timeInMillis.toString())
         reference.putFile(imageUri)
             .addOnCompleteListener { uploadedImageResponse ->
                 if (uploadedImageResponse.isSuccessful) {
@@ -175,31 +133,16 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun sendTextMessage(message: Message) {
-        val randomKey = firebaseDatabase.reference.push().key.toString()
-
         mBinding.etMessageBox.text.clear()
 
-        firebaseDatabase.reference.child(FirebaseUtils.CHATS)
-            .child(senderRoom)
-            .child(FirebaseUtils.MESSAGES)
-            .child(randomKey)
+        firebaseDatabase.reference
+            .child(FirebaseUtils.PUBLIC)
+            .push()
             .setValue(message)
             .addOnCompleteListener {
+                hideProgressDialog()
                 if (it.isSuccessful) {
-                    firebaseDatabase.reference.child(FirebaseUtils.CHATS)
-                        .child(receiverRoom)
-                        .child(FirebaseUtils.MESSAGES)
-                        .child(randomKey)
-                        .setValue(message)
-                        .addOnCompleteListener {
-                            hideProgressDialog()
-                            if (it.isSuccessful) {
-                                currentUser?.let { FirebaseUtils.sendNotification(this, it.name, message.message, receiverUser!!.deviceToken) }
-                            } else
-                                it.exception?.message?.let { it1 -> showToast(it1) }
-                        }
-
-
+                    //
                 } else
                     it.exception?.message?.let { it1 -> showToast(it1) }
             }
@@ -207,9 +150,6 @@ class ChatActivity : BaseActivity() {
         val lastMsgMap = hashMapOf<String, Any>()
         lastMsgMap[FirebaseUtils.LAST_MSG] = message.message
         lastMsgMap[FirebaseUtils.LAST_MSG_TIME] = message.timeStamp
-
-        firebaseDatabase.reference.child(FirebaseUtils.CHATS).child(senderRoom).updateChildren(lastMsgMap)
-        firebaseDatabase.reference.child(FirebaseUtils.CHATS).child(receiverRoom).updateChildren(lastMsgMap)
     }
 
 }

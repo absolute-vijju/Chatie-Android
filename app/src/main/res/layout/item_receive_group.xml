@@ -7,17 +7,30 @@
     android:layout_marginTop="5dp">
 
     <LinearLayout
-        android:id="@+id/llItemSent"
+        android:id="@+id/llItemReceive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/sent_drawable"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/receive_drawable"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/comfortaa_bold"
+            android:paddingStart="5dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:text="Vijay Koshti" />
+
         <ImageView
-            android:id="@+id/ivSent"
+            android:id="@+id/ivReceive"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -26,16 +39,15 @@
             app:srcCompat="@drawable/avatar" />
 
         <TextView
-            android:id="@+id/tvSentMessage"
+            android:id="@+id/tvReceivedMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
             android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            tools:text="TextView"
-            android:textSize="15sp" />
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            tools:text="TextView" />
 
     </LinearLayout>
 
@@ -44,10 +56,10 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/llItemSent"
-        app:layout_constraintStart_toStartOf="@+id/llItemSent"
-        app:layout_constraintTop_toTopOf="@+id/llItemSent"
+        app:layout_constraintBottom_toBottomOf="@+id/llItemReceive"
+        app:layout_constraintEnd_toEndOf="@+id/llItemReceive"
+        app:layout_constraintStart_toEndOf="@+id/llItemReceive"
+        app:layout_constraintTop_toTopOf="@+id/llItemReceive"
         app:srcCompat="@drawable/ic_fb_love" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

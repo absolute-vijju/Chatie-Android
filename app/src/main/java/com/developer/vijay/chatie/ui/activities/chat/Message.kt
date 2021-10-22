@@ -6,4 +6,5 @@ data class Message(
     var senderId: String = "",
     var timeStamp: Long = 0L,
     var feeling: Int = -1,
+    var imageUrl: String = "",
 )

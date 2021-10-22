@@ -1,26 +1,26 @@
-package com.developer.vijay.chatie.ui.activities.chat
+package com.developer.vijay.chatie.ui.activities.group_chat
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.vijay.chatie.R
-import com.developer.vijay.chatie.databinding.ItemReceiveBinding
-import com.developer.vijay.chatie.databinding.ItemSentBinding
+import com.developer.vijay.chatie.databinding.ItemReceiveGroupBinding
+import com.developer.vijay.chatie.databinding.ItemSentGroupBinding
+import com.developer.vijay.chatie.models.User
+import com.developer.vijay.chatie.ui.activities.chat.Message
 import com.developer.vijay.chatie.utils.FirebaseUtils
 import com.developer.vijay.chatie.utils.GeneralFunctions
-import com.developer.vijay.chatie.utils.showToast
 import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.database.ValueEventListener
 
-class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = arrayListOf<Message>()
     private val reactionList = intArrayOf(
@@ -31,13 +31,11 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         R.drawable.ic_fb_sad,
         R.drawable.ic_fb_angry
     )
-    private var senderRoom = ""
-    private var receiverRoom = ""
 
-    private inner class SentViewHolder(val mBinding: ItemSentBinding) :
+    private inner class SentViewHolder(val mBinding: ItemSentGroupBinding) :
         RecyclerView.ViewHolder(mBinding.root)
 
-    private inner class ReceiveViewHolder(val mBinding: ItemReceiveBinding) :
+    private inner class ReceiveViewHolder(val mBinding: ItemReceiveGroupBinding) :
         RecyclerView.ViewHolder(mBinding.root)
 
     override fun getItemViewType(position: Int): Int {
@@ -49,8 +47,20 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == R.layout.item_sent)
-            return SentViewHolder(ItemSentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        return ReceiveViewHolder(ItemReceiveBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            return SentViewHolder(
+                ItemSentGroupBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        return ReceiveViewHolder(
+            ItemReceiveGroupBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -58,7 +68,9 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         val message = messageList[position]
 
-        val config = ReactionsConfigBuilder(holder.itemView.context).withReactions(reactionList).build()
+        val config = ReactionsConfigBuilder(holder.itemView.context)
+            .withReactions(reactionList)
+            .build()
 
         if (message.feeling != -1) {
             if (holder is SentViewHolder) {
@@ -78,6 +90,7 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
         }
 
+
         val popup = ReactionPopup(holder.itemView.context, config) { reactionPosition ->
 
             if (holder is SentViewHolder) {
@@ -94,24 +107,30 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             message.feeling = reactionPosition
 
             FirebaseDatabase.getInstance().reference
-                .child(FirebaseUtils.CHATS)
-                .child(senderRoom)
-                .child(FirebaseUtils.MESSAGES)
+                .child(FirebaseUtils.PUBLIC)
                 .child(message.messageId)
                 .setValue(message)
 
-            FirebaseDatabase.getInstance().reference
-                .child(FirebaseUtils.CHATS)
-                .child(receiverRoom)
-                .child(FirebaseUtils.MESSAGES)
-                .child(message.messageId)
-                .setValue(message)
 
             true
         }
 
         if (holder is SentViewHolder)
             holder.mBinding.apply {
+
+                (this.root.context as GroupChatActivity).firebaseDatabase.reference
+                    .child(FirebaseUtils.USERS)
+                    .child(message.senderId)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val user = snapshot.getValue(User::class.java)
+                            tvUsername.text = user?.name
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
 
                 if (message.message.equals(FirebaseUtils.IMAGE, true)) {
                     tvSentMessage.isVisible = false
@@ -124,52 +143,27 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
 
                 root.setOnTouchListener { p0, p1 ->
-//                    popup.onTouch(p0!!, p1!!)
+                    popup.onTouch(p0!!, p1!!)
                     false
-                }
-
-                root.setOnLongClickListener {
-
-                    AlertDialog.Builder(it.context)
-                        .setTitle("Delete message?")
-                        .setPositiveButton("Delete For Me") { dialogInterface, i ->
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .removeValue()
-                        }
-                        .setNegativeButton("Cancel") { dialogInterface, i ->
-                            dialogInterface.dismiss()
-                        }
-                        .setNeutralButton("Delete For Everyone") { dialogInterface, i ->
-
-                            message.message = "You deleted this message."
-
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .setValue(message)
-
-                            message.message = "This message was deleted."
-
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(receiverRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .setValue(message)
-                        }
-                        .show()
-                    true
                 }
             }
 
         if (holder is ReceiveViewHolder)
             holder.mBinding.apply {
+
+                (this.root.context as GroupChatActivity).firebaseDatabase.reference
+                    .child(FirebaseUtils.USERS)
+                    .child(message.senderId)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val user = snapshot.getValue(User::class.java)
+                            tvUsername.text = user?.name
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
 
                 if (message.message.equals(FirebaseUtils.IMAGE, true)) {
                     tvReceivedMessage.isVisible = false
@@ -182,27 +176,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 }
 
                 root.setOnTouchListener { p0, p1 ->
-//                    popup.onTouch(p0!!, p1!!)
+                    popup.onTouch(p0!!, p1!!)
                     false
-                }
-
-                root.setOnLongClickListener {
-
-                    AlertDialog.Builder(it.context)
-                        .setTitle("Delete message?")
-                        .setPositiveButton("Delete For Me") { dialogInterface, i ->
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .removeValue()
-                        }
-                        .setNegativeButton("Cancel") { dialogInterface, i ->
-                            dialogInterface.dismiss()
-                        }
-                        .show()
-                    true
                 }
             }
 
@@ -212,10 +187,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return messageList.size
     }
 
-    fun setData(messageList: ArrayList<Message>, senderRoom: String, receiverRoom: String) {
+    fun setData(messageList: ArrayList<Message>) {
         this.messageList = messageList
-        this.senderRoom = senderRoom
-        this.receiverRoom = receiverRoom
         notifyDataSetChanged()
     }
 }

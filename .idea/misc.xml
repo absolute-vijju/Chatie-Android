@@ -4,7 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable-v24/receive_drawable.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_send.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/receive_drawable.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/sent_drawable.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/textbox_outline.xml" value="0.35625" />
         <entry key="app/src/main/res/font/roboto_light.xml" value="0.3703125" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.34010416666666665" />
@@ -19,7 +23,9 @@
         <entry key="app/src/main/res/layout/dialog_progress.xml" value="0.33487179487179486" />
         <entry key="app/src/main/res/layout/item_conversation.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/item_receive.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_receive_group.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/item_sent.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_sent_group.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/item_status.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/row_conversation.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.34010416666666665" />

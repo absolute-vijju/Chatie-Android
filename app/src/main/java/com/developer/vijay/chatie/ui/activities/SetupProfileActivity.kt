@@ -49,65 +49,49 @@ class SetupProfileActivity : BaseActivity() {
             showProgressDialog("Creating your account.")
 
             selectedImageURI?.let { imageUri ->
-                val storageReference = firebaseStorage.reference.child(FirebaseUtils.PROFILES)
-                    .child(firebaseAuth.uid.toString())  // Create Folder in Realtime DB and put user image into it.
+                val storageReference = firebaseStorage.reference.child(FirebaseUtils.PROFILES).child(firebaseAuth.uid.toString())  // Create Folder in Realtime DB and put user image into it.
 
                 storageReference.putFile(imageUri).addOnCompleteListener { imageResponse ->
                     if (imageResponse.isSuccessful) {
                         storageReference.downloadUrl.addOnCompleteListener { uploadedImageResponse ->
 
                             if (uploadedImageResponse.isSuccessful) {
-                                firebaseDatabase.reference
-                                    .child(FirebaseUtils.USERS)
-                                    .child(firebaseAuth.uid.toString())
-                                    .setValue(
-                                        User(
-                                            firebaseAuth.uid.toString(),
-                                            name,
-                                            firebaseAuth.currentUser?.phoneNumber.toString(),
-                                            uploadedImageResponse.result.toString()
-                                        )
-                                    )
-                                    .addOnCompleteListener { userCreationResponse ->
-                                        if (userCreationResponse.isSuccessful) {
-                                            hideProgressDialog()
-                                            PrefUtils.setUser(
-                                                User(
-                                                    firebaseAuth.uid.toString(),
-                                                    name,
-                                                    firebaseAuth.currentUser?.phoneNumber.toString(),
-                                                    uploadedImageResponse.result.toString()
-                                                )
-                                            )
-                                            showToast("User Created.")
-                                            startActivity(Intent(this, HomeActivity::class.java))
-                                            finish()
-                                        } else {
-                                            hideProgressDialog()
-                                            userCreationResponse.exception?.message?.let { errorMessage ->
-                                                showToast(
-                                                    errorMessage
-                                                )
-                                            }
+
+                                firebaseMessaging.token.addOnCompleteListener { deviceTokenResponse ->
+                                    if (deviceTokenResponse.isSuccessful)
+                                        deviceTokenResponse.result?.let { deviceToken ->
+
+                                            val user = User(firebaseAuth.uid.toString(), name, firebaseAuth.currentUser?.phoneNumber.toString(), uploadedImageResponse.result.toString(), deviceToken)
+
+                                            firebaseDatabase.reference
+                                                .child(FirebaseUtils.USERS)
+                                                .child(firebaseAuth.uid.toString())
+                                                .setValue(user)
+                                                .addOnCompleteListener { userCreationResponse ->
+                                                    if (userCreationResponse.isSuccessful) {
+                                                        hideProgressDialog()
+                                                        PrefUtils.setUser(user)
+                                                        showToast("User Created.")
+                                                        startActivity(Intent(this, HomeActivity::class.java))
+                                                        finish()
+                                                    } else {
+                                                        userCreationResponse.exception?.message?.let { errorMessage -> showToast(errorMessage) }
+                                                    }
+                                                }
+
                                         }
-                                    }
+                                    else
+                                        deviceTokenResponse.exception?.message?.let { errorMessage -> showToast(errorMessage) }
+                                }
 
                             } else {
                                 hideProgressDialog()
-                                uploadedImageResponse.exception?.message?.let { errorMessage ->
-                                    showToast(
-                                        errorMessage
-                                    )
-                                }
+                                uploadedImageResponse.exception?.message?.let { errorMessage -> showToast(errorMessage) }
                             }
                         }
                     } else {
                         hideProgressDialog()
-                        imageResponse.exception?.message?.let { errorMessage ->
-                            showToast(
-                                errorMessage
-                            )
-                        }
+                        imageResponse.exception?.message?.let { errorMessage -> showToast(errorMessage) }
                     }
                 }
 

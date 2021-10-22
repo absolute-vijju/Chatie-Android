@@ -3,18 +3,12 @@ package com.developer.vijay.chatie.ui.activities.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ItemConversationBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.utils.BaseActivity
 import com.developer.vijay.chatie.utils.FirebaseUtils
 import com.developer.vijay.chatie.utils.GeneralFunctions
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,8 +44,8 @@ class UserAdapter(val onClick: (position: Int) -> Unit) :
         ) { snapshot ->
             if (snapshot.exists()) {
 
-                val lastMsg = snapshot.child(FirebaseUtils.LASTMSG).getValue(String::class.java)
-                val lastMsgTime = snapshot.child(FirebaseUtils.LASTMSGTIME).getValue(Long::class.java)
+                val lastMsg = snapshot.child(FirebaseUtils.LAST_MSG).getValue(String::class.java)
+                val lastMsgTime = snapshot.child(FirebaseUtils.LAST_MSG_TIME).getValue(Long::class.java)
 
                 val simpleDateFormat = SimpleDateFormat("hh:mm a")
 
