@@ -1,9 +1,12 @@
 package com.developer.vijay.chatie.utils
 
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.TransitionOptions
 import com.bumptech.glide.load.DataSource
@@ -76,4 +79,17 @@ object GeneralFunctions {
     fun getHour(hour: Int) = if (hour == 0) 12 else hour
 
     fun getAmPm(amPm: Int) = if (amPm == Calendar.AM) "am" else "pm"
+
+    fun isAppRunning(context: Context, packageName: String): Boolean {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val activePackages = activityManager.runningAppProcesses
+        activePackages?.let {
+            for (processInfo in activePackages) {
+                if (processInfo.processName == packageName) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
 import com.developer.vijay.chatie.utils.FirebaseUtils
+import com.developer.vijay.chatie.utils.GeneralFunctions
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -21,12 +22,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        remoteMessage.notification?.let {
-            if (it.title != null && it.body != null)
-                sendNotification(it.title!!, it.body!!)
+        if (!GeneralFunctions.isAppRunning(applicationContext, packageName)) {
+            remoteMessage.notification?.let {
+                if (it.title != null && it.body != null)
+                    sendNotification(it.title!!, it.body!!)
+            }
         }
 
     }
+
 
     private fun sendNotification(messageTitle: String, messageBody: String) {
         val intent = Intent(this, HomeActivity::class.java)
