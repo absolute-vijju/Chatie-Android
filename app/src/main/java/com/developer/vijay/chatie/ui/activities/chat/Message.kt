@@ -5,6 +5,6 @@ data class Message(
     var message: String = "",
     var senderId: String = "",
     var timeStamp: Long = 0L,
-    var feeling: Int = -1,
+    var feeling: Int = 0,
     var imageUrl: String = "",
 )

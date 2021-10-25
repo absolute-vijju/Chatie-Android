@@ -43,11 +43,10 @@
         android:id="@+id/ivFeeling"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/llItemSent"
         app:layout_constraintStart_toStartOf="@+id/llItemSent"
         app:layout_constraintTop_toTopOf="@+id/llItemSent"
-        app:srcCompat="@drawable/ic_fb_love" />
+        app:srcCompat="@drawable/ic_add_reaction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

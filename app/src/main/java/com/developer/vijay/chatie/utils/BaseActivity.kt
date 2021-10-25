@@ -45,21 +45,14 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun showProgressDialog(message: String) {
-        dialog = ProgressDialog(this).apply {
-            setMessage(message)
-            setCancelable(false)
-            show()
-        }
-        /*val params = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
         val view = DialogProgressBinding.inflate(layoutInflater)
         dialog = Dialog(this).apply {
-            setContentView(R.layout.dialog_progress)
-            findViewById<TextView>(R.id.tvMessage).text = message
+            setContentView(view.root)
+            setCancelable(false)
+            view.tvMessage.text = message
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
             show()
-        }*/
+        }
     }
 
     fun hideProgressDialog() {
@@ -73,10 +66,12 @@ open class BaseActivity : AppCompatActivity() {
         firebaseDatabase.reference.child(childPath1)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    hideProgressDialog()
                     onDataChange(snapshot)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    hideProgressDialog()
                     showToast(error.message)
                 }
             })
@@ -90,10 +85,12 @@ open class BaseActivity : AppCompatActivity() {
         firebaseDatabase.reference.child(childPath1).child(childPath2)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    hideProgressDialog()
                     onDataChange(snapshot)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    hideProgressDialog()
                     showToast(error.message)
                 }
             })
@@ -108,10 +105,12 @@ open class BaseActivity : AppCompatActivity() {
         firebaseDatabase.reference.child(childPath1).child(childPath2).child(childPath3)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    hideProgressDialog()
                     onDataChange(snapshot)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    hideProgressDialog()
                     showToast(error.message)
                 }
             })

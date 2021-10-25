@@ -56,6 +56,12 @@ object GeneralFunctions {
     }
 
     fun getDay(day: Int): String {
+        val calendar = Calendar.getInstance()
+        if (calendar.get(Calendar.DAY_OF_WEEK) == day)
+            return "today"
+        calendar.add(Calendar.DAY_OF_WEEK, -1)
+        if (calendar.get(Calendar.DAY_OF_WEEK) == day)
+            return "yesterday"
         return when (day) {
             Calendar.SUNDAY -> "sunday"
             Calendar.MONDAY -> "monday"

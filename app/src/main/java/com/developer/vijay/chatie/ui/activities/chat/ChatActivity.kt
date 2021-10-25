@@ -59,19 +59,19 @@ class ChatActivity : BaseActivity() {
         firebaseDatabase.reference.child(FirebaseUtils.PRESENCE).child(receiverUser!!.uid).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.getValue(Long::class.java)?.let {
-                    if (it == 0L)
-                        mBinding.tvStatus.text = "online"
-                    else if (it == 1L)
-                        mBinding.tvStatus.text = "typing..."
-                    else {
-                        val calendar = Calendar.getInstance()
-                        val numberFormat = DecimalFormat("#00")
-                        calendar.timeInMillis = it
-                        val day = calendar.get(Calendar.DAY_OF_WEEK)
-                        val hour = calendar.get(Calendar.HOUR)
-                        val minute = calendar.get(Calendar.MINUTE)
-                        val amPM = calendar.get(Calendar.AM_PM)
-                        mBinding.tvStatus.text = "last seen ${GeneralFunctions.getDay(day)} at ${GeneralFunctions.getHour(hour)}:${numberFormat.format(minute)} ${GeneralFunctions.getAmPm(amPM)}"
+                    when (it) {
+                        0L -> mBinding.tvStatus.text = "online"
+                        1L -> mBinding.tvStatus.text = "typing..."
+                        else -> {
+                            val calendar = Calendar.getInstance()
+                            val numberFormat = DecimalFormat("#00")
+                            calendar.timeInMillis = it
+                            val day = calendar.get(Calendar.DAY_OF_WEEK)
+                            val hour = calendar.get(Calendar.HOUR)
+                            val minute = calendar.get(Calendar.MINUTE)
+                            val amPM = calendar.get(Calendar.AM_PM)
+                            mBinding.tvStatus.text = "last seen ${GeneralFunctions.getDay(day)} at ${GeneralFunctions.getHour(hour)}:${numberFormat.format(minute)} ${GeneralFunctions.getAmPm(amPM)}"
+                        }
                     }
                 }
             }

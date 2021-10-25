@@ -24,6 +24,7 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = arrayListOf<Message>()
     private val reactionList = intArrayOf(
+        R.drawable.ic_add_reaction,
         R.drawable.ic_fb_like,
         R.drawable.ic_fb_love,
         R.drawable.ic_fb_laugh,
@@ -60,36 +61,13 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         val config = ReactionsConfigBuilder(holder.itemView.context).withReactions(reactionList).build()
 
-        if (message.feeling != -1) {
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                holder.mBinding.ivFeeling.setImageResource(reactionList[message.feeling])
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                holder.mBinding.ivFeeling.setImageResource(reactionList[message.feeling])
-            }
-        } else {
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = false
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = false
-            }
-        }
-
         val popup = ReactionPopup(holder.itemView.context, config) { reactionPosition ->
 
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                if (reactionPosition != -1)
-                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                if (reactionPosition != -1)
-                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
-            }
+            if (holder is SentViewHolder)
+                holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
+
+            if (holder is ReceiveViewHolder)
+                holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
 
             message.feeling = reactionPosition
 
@@ -113,6 +91,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holder is SentViewHolder)
             holder.mBinding.apply {
 
+                ivFeeling.setImageResource(reactionList[message.feeling])
+
                 if (message.message.equals(FirebaseUtils.IMAGE, true)) {
                     tvSentMessage.isVisible = false
                     ivSent.isVisible = true
@@ -123,8 +103,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     tvSentMessage.text = message.message
                 }
 
-                root.setOnTouchListener { p0, p1 ->
-//                    popup.onTouch(p0!!, p1!!)
+                ivFeeling.setOnTouchListener { p0, p1 ->
+                    popup.onTouch(p0!!, p1!!)
                     false
                 }
 
@@ -171,6 +151,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holder is ReceiveViewHolder)
             holder.mBinding.apply {
 
+                ivFeeling.setImageResource(reactionList[message.feeling])
+
                 if (message.message.equals(FirebaseUtils.IMAGE, true)) {
                     tvReceivedMessage.isVisible = false
                     ivReceive.isVisible = true
@@ -181,8 +163,8 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     tvReceivedMessage.text = message.message
                 }
 
-                root.setOnTouchListener { p0, p1 ->
-//                    popup.onTouch(p0!!, p1!!)
+                ivFeeling.setOnTouchListener { p0, p1 ->
+                    popup.onTouch(p0!!, p1!!)
                     false
                 }
 

@@ -33,20 +33,19 @@
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp"
-            tools:text="TextView"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:text="TextView" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivFeeling"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/llItemReceive"
         app:layout_constraintEnd_toEndOf="@+id/llItemReceive"
         app:layout_constraintStart_toEndOf="@+id/llItemReceive"
         app:layout_constraintTop_toTopOf="@+id/llItemReceive"
-        app:srcCompat="@drawable/ic_fb_love" />
+        app:srcCompat="@drawable/ic_add_reaction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
