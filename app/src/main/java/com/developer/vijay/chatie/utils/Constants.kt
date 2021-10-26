@@ -5,4 +5,5 @@ object Constants {
     const val KEY_PHONE_NUMBER = "key_phone_number"
     const val PREF_NAME = "chatie_pref"
     const val USER = "user"
+    const val IS_FIRST_TIME = "is_first_time"
 }

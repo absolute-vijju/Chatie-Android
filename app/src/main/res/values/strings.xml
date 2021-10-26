@@ -7,6 +7,12 @@
     <string name="enter_the_otp_code_to_verify_your_phone_number">Enter the OTP code to verify your phone number.</string>
     <string name="type_your_name">Type your name</string>
     <string name="setup_profile">Setup Profile</string>
-    <string name="please_set_your_name_and_an_optional_profile_image">Please set your name and an optional profile image.</string>
+    <string name="please_set_your_name_and_profile_image">Please set your name and profile image.</string>
     <string name="profile_info">Profile Info</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="chats">Chats</string>
+    <string name="status">Status</string>
+    <string name="profile">Profile</string>
+    <string name="call">Call</string>
+    <string name="save">Save</string>
 </resources>

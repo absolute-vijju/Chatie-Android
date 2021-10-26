@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/ivSent"
             android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
             android:visibility="gone"
@@ -34,8 +34,8 @@
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
             android:textColor="@color/white"
-            tools:text="TextView"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:text="TextView" />
 
     </LinearLayout>
 

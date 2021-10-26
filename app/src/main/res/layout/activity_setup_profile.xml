@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="@string/please_set_your_name_and_an_optional_profile_image"
+        android:text="@string/please_set_your_name_and_profile_image"
         android:textSize="12sp" />
 
     <androidx.cardview.widget.CardView

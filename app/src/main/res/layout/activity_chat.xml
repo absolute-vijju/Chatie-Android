@@ -90,28 +90,28 @@
 
             <EditText
                 android:id="@+id/etMessageBox"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="Type a message..."
+                android:hint="@string/type_a_message"
                 android:inputType="textPersonName"
                 android:padding="8dp"
                 android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/ivAttachment"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="12dp"
                 app:srcCompat="@drawable/ic_attachment"
                 app:tint="#676767" />
 
             <ImageView
                 android:id="@+id/ivCamera"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="12dp"
                 app:srcCompat="@drawable/ic_camera"
                 app:tint="#676767" />

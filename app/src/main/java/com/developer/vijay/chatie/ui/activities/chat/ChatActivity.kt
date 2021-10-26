@@ -1,7 +1,11 @@
 package com.developer.vijay.chatie.ui.activities.chat
 
+import android.Manifest
+import android.content.ContentValues
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +40,8 @@ class ChatActivity : BaseActivity() {
 
     private var currentUser: User? = null
     private var receiverUser: User? = null
+
+    private var resultUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,6 +157,48 @@ class ChatActivity : BaseActivity() {
                 }
             }
         })
+
+        val takePhotoContract = registerForActivityResult(ActivityResultContracts.TakePicture()) { status ->
+                if (status) {
+                    resultUri?.let {
+                        showProgressDialog("Sending image...")
+                        val messageObj = Message(message = FirebaseUtils.IMAGE, senderId = currentUser!!.uid, timeStamp = Date().time)
+                        sendImageMessage(messageObj, it)
+                    }
+                } else
+                    showToast("an ERROR occurred.")
+            }
+
+        val permissionContract = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
+                resultMap.entries.forEach { entry ->
+                    if (entry.value) {
+                        createImageURI()?.let { takePhotoContract.launch(it) }
+                    }
+                }
+            }
+
+        mBinding.ivCamera.setOnClickListener {
+            permissionContract.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        }
+    }
+
+    private fun createImageURI(): Uri? {
+
+        val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        else
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+        val imageName = System.currentTimeMillis()
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val finalURI = contentResolver.insert(imageCollection, contentValues)
+        resultUri = finalURI
+        return finalURI
     }
 
     private fun sendImageMessage(message: Message, imageUri: Uri) {

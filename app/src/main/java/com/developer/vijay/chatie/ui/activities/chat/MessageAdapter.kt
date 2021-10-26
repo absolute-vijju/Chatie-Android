@@ -63,13 +63,16 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         val popup = ReactionPopup(holder.itemView.context, config) { reactionPosition ->
 
-            if (holder is SentViewHolder)
-                holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
+            if (reactionPosition != -1) {
+                if (holder is SentViewHolder)
+                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
 
-            if (holder is ReceiveViewHolder)
-                holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
+                if (holder is ReceiveViewHolder)
+                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
 
-            message.feeling = reactionPosition
+                message.feeling = reactionPosition
+            }
+
 
             FirebaseDatabase.getInstance().reference
                 .child(FirebaseUtils.CHATS)

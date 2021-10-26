@@ -5,8 +5,10 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable-v24/receive_drawable.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_call.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/ic_send.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/ic_status.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/receive_drawable.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/sent_drawable.xml" value="0.35625" />
         <entry key="app/src/main/res/drawable/textbox_outline.xml" value="0.35625" />

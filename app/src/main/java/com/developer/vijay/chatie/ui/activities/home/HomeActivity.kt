@@ -14,6 +14,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivityHomeBinding
 import com.developer.vijay.chatie.models.User
+import com.developer.vijay.chatie.ui.activities.SetupProfileActivity
 import com.developer.vijay.chatie.ui.activities.chat.ChatActivity
 import com.developer.vijay.chatie.ui.activities.group_chat.GroupChatActivity
 import com.developer.vijay.chatie.utils.*
@@ -234,7 +235,9 @@ class HomeActivity : BaseActivity() {
                 showToast("Coming soon...")
             }
             R.id.mSetting -> {
-                showToast("Coming soon...")
+                startActivity(Intent(this, SetupProfileActivity::class.java).apply {
+                    putExtra(Constants.IS_FIRST_TIME, false)
+                })
             }
         }
         return super.onOptionsItemSelected(item)
