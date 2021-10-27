@@ -111,43 +111,49 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 }
 
-                root.setOnLongClickListener {
+                if (!message.message.equals("You deleted this message.", true)) {
 
-                    AlertDialog.Builder(it.context)
-                        .setTitle("Delete message?")
-                        .setPositiveButton("Delete For Me") { dialogInterface, i ->
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .removeValue()
+                    if (!message.message.equals("This message was deleted.", true)) {
+
+                        root.setOnLongClickListener {
+
+                            AlertDialog.Builder(it.context)
+                                .setTitle("Delete message?")
+                                .setPositiveButton("Delete For Me") { dialogInterface, i ->
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.CHATS)
+                                        .child(senderRoom)
+                                        .child(FirebaseUtils.MESSAGES)
+                                        .child(message.messageId)
+                                        .removeValue()
+                                }
+                                .setNegativeButton("Cancel") { dialogInterface, i ->
+                                    dialogInterface.dismiss()
+                                }
+                                .setNeutralButton("Delete For Everyone") { dialogInterface, i ->
+
+                                    message.message = "You deleted this message."
+
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.CHATS)
+                                        .child(senderRoom)
+                                        .child(FirebaseUtils.MESSAGES)
+                                        .child(message.messageId)
+                                        .setValue(message)
+
+                                    message.message = "This message was deleted."
+
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.CHATS)
+                                        .child(receiverRoom)
+                                        .child(FirebaseUtils.MESSAGES)
+                                        .child(message.messageId)
+                                        .setValue(message)
+                                }
+                                .show()
+                            true
                         }
-                        .setNegativeButton("Cancel") { dialogInterface, i ->
-                            dialogInterface.dismiss()
-                        }
-                        .setNeutralButton("Delete For Everyone") { dialogInterface, i ->
-
-                            message.message = "You deleted this message."
-
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .setValue(message)
-
-                            message.message = "This message was deleted."
-
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(receiverRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .setValue(message)
-                        }
-                        .show()
-                    true
+                    }
                 }
             }
 
@@ -171,26 +177,28 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     false
                 }
 
-                root.setOnLongClickListener {
+                if (!message.message.equals("This message was deleted.", true)) {
 
-                    AlertDialog.Builder(it.context)
-                        .setTitle("Delete message?")
-                        .setPositiveButton("Delete For Me") { dialogInterface, i ->
-                            FirebaseDatabase.getInstance().reference
-                                .child(FirebaseUtils.CHATS)
-                                .child(senderRoom)
-                                .child(FirebaseUtils.MESSAGES)
-                                .child(message.messageId)
-                                .removeValue()
-                        }
-                        .setNegativeButton("Cancel") { dialogInterface, i ->
-                            dialogInterface.dismiss()
-                        }
-                        .show()
-                    true
+                    root.setOnLongClickListener {
+
+                        AlertDialog.Builder(it.context)
+                            .setTitle("Delete message?")
+                            .setPositiveButton("Delete For Me") { dialogInterface, i ->
+                                FirebaseDatabase.getInstance().reference
+                                    .child(FirebaseUtils.CHATS)
+                                    .child(senderRoom)
+                                    .child(FirebaseUtils.MESSAGES)
+                                    .child(message.messageId)
+                                    .removeValue()
+                            }
+                            .setNegativeButton("Cancel") { dialogInterface, i ->
+                                dialogInterface.dismiss()
+                            }
+                            .show()
+                        true
+                    }
                 }
             }
-
     }
 
     override fun getItemCount(): Int {

@@ -23,7 +23,10 @@
         <entry key="app/src/main/res/layout/demo_layout.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/demo_status.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/dialog_progress.xml" value="0.33487179487179486" />
-        <entry key="app/src/main/res/layout/item_conversation.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/fragment_call.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/fragment_status.xml" value="0.34010416666666665" />
+        <entry key="app/src/main/res/layout/item_conversation.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_receive.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/item_receive_group.xml" value="0.34010416666666665" />
         <entry key="app/src/main/res/layout/item_sent.xml" value="0.34010416666666665" />

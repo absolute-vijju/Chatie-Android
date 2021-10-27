@@ -11,15 +11,9 @@ import com.android.volley.*
 import com.developer.vijay.chatie.databinding.ActivityGroupChatBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.chat.Message
-import com.developer.vijay.chatie.ui.activities.chat.MessageAdapter
 import com.developer.vijay.chatie.utils.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import java.util.*
 
 class GroupChatActivity : BaseActivity() {
@@ -44,6 +38,7 @@ class GroupChatActivity : BaseActivity() {
         }
 
         GeneralFunctions.loadImage(this, "https://www.vippng.com/png/detail/12-126390_png-file-svg-group-chat-transparent.png", mBinding.ivProfilePic)
+        mBinding.tvName.text = "Public Group"
 
         mBinding.rvChats.apply {
             layoutManager = LinearLayoutManager(this@GroupChatActivity)
@@ -113,7 +108,7 @@ class GroupChatActivity : BaseActivity() {
 
     private fun sendImageMessage(message: Message, imageUri: Uri) {
 
-        val reference = firebaseStorage.reference.child("GroupChats").child(Calendar.getInstance().timeInMillis.toString())
+        val reference = firebaseStorage.reference.child(FirebaseUtils.GROUPCHATS).child(Calendar.getInstance().timeInMillis.toString())
         reference.putFile(imageUri)
             .addOnCompleteListener { uploadedImageResponse ->
                 if (uploadedImageResponse.isSuccessful) {

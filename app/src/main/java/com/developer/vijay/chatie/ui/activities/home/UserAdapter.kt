@@ -3,16 +3,17 @@ package com.developer.vijay.chatie.ui.activities.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ItemConversationBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.utils.BaseActivity
+import com.developer.vijay.chatie.utils.Constants
 import com.developer.vijay.chatie.utils.FirebaseUtils
 import com.developer.vijay.chatie.utils.GeneralFunctions
 import com.google.firebase.auth.FirebaseAuth
-import java.text.SimpleDateFormat
 import java.util.*
 
-class UserAdapter(val onClick: (position: Int) -> Unit) :
+class UserAdapter(val onClick: (viewId: Int, position: Int) -> Unit) :
     RecyclerView.Adapter<UserAdapter.ConversionViewHolder>() {
 
     private var userList = arrayListOf<User>()
@@ -47,14 +48,13 @@ class UserAdapter(val onClick: (position: Int) -> Unit) :
                 val lastMsg = snapshot.child(FirebaseUtils.LAST_MSG).getValue(String::class.java)
                 val lastMsgTime = snapshot.child(FirebaseUtils.LAST_MSG_TIME).getValue(Long::class.java)
 
-                val simpleDateFormat = SimpleDateFormat("hh:mm a")
 
                 lastMsg?.let {
                     holder.mBinding.tvLastMessage.text = it
                 }
 
                 lastMsgTime?.let {
-                    holder.mBinding.tvMessageTime.text = simpleDateFormat.format(Date(it))
+                    holder.mBinding.tvMessageTime.text = Constants.simpleTimeFormat.format(Date(it))
                 }
 
 
@@ -63,6 +63,9 @@ class UserAdapter(val onClick: (position: Int) -> Unit) :
         }
 
         holder.apply {
+            mBinding.root.setOnClickListener { onClick(0, position) }
+            mBinding.ivProfilePic.setOnClickListener { onClick(R.id.ivProfilePic, position) }
+
             mBinding.tvUsername.text = user.name
             GeneralFunctions.loadImage(
                 holder.itemView.context,
@@ -70,8 +73,6 @@ class UserAdapter(val onClick: (position: Int) -> Unit) :
                 mBinding.ivProfilePic
             )
         }
-
-        holder.mBinding.root.setOnClickListener { onClick(position) }
     }
 
     override fun getItemCount(): Int {

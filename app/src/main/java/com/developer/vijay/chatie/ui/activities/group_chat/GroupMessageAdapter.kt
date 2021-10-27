@@ -3,6 +3,7 @@ package com.developer.vijay.chatie.ui.activities.group_chat
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.vijay.chatie.R
@@ -47,20 +48,8 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == R.layout.item_sent)
-            return SentViewHolder(
-                ItemSentGroupBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
-        return ReceiveViewHolder(
-            ItemReceiveGroupBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+            return SentViewHolder(ItemSentGroupBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ReceiveViewHolder(ItemReceiveGroupBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -72,39 +61,17 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             .withReactions(reactionList)
             .build()
 
-        if (message.feeling != -1) {
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                holder.mBinding.ivFeeling.setImageResource(reactionList[message.feeling])
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                holder.mBinding.ivFeeling.setImageResource(reactionList[message.feeling])
-            }
-        } else {
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = false
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = false
-            }
-        }
-
-
         val popup = ReactionPopup(holder.itemView.context, config) { reactionPosition ->
 
-            if (holder is SentViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                if (reactionPosition != -1)
+            if (reactionPosition != -1) {
+                if (holder is SentViewHolder)
                     holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
-            }
-            if (holder is ReceiveViewHolder) {
-                holder.mBinding.ivFeeling.isVisible = true
-                if (reactionPosition != -1)
-                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
-            }
 
-            message.feeling = reactionPosition
+                if (holder is ReceiveViewHolder)
+                    holder.mBinding.ivFeeling.setImageResource(reactionList[reactionPosition])
+
+                message.feeling = reactionPosition
+            }
 
             FirebaseDatabase.getInstance().reference
                 .child(FirebaseUtils.PUBLIC)
@@ -117,6 +84,8 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         if (holder is SentViewHolder)
             holder.mBinding.apply {
+
+                ivFeeling.setImageResource(reactionList[message.feeling])
 
                 (this.root.context as GroupChatActivity).firebaseDatabase.reference
                     .child(FirebaseUtils.USERS)
@@ -142,14 +111,56 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     tvSentMessage.text = message.message
                 }
 
-                root.setOnTouchListener { p0, p1 ->
+                ivFeeling.setOnTouchListener { p0, p1 ->
                     popup.onTouch(p0!!, p1!!)
                     false
+                }
+
+
+                if (!message.message.equals("You deleted this message.", true)) {
+
+                    if (!message.message.equals("This message was deleted.", true)) {
+
+                        root.setOnLongClickListener {
+
+                            AlertDialog.Builder(it.context)
+                                .setTitle("Delete message?")
+                                .setPositiveButton("Delete For Me") { dialogInterface, i ->
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.PUBLIC)
+                                        .child(message.messageId)
+                                        .removeValue()
+                                }
+                                .setNegativeButton("Cancel") { dialogInterface, i ->
+                                    dialogInterface.dismiss()
+                                }
+                                .setNeutralButton("Delete For Everyone") { dialogInterface, i ->
+
+                                    message.message = "You deleted this message."
+
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.PUBLIC)
+                                        .child(message.messageId)
+                                        .setValue(message)
+
+                                    message.message = "This message was deleted."
+
+                                    FirebaseDatabase.getInstance().reference
+                                        .child(FirebaseUtils.PUBLIC)
+                                        .child(message.messageId)
+                                        .setValue(message)
+                                }
+                                .show()
+                            true
+                        }
+                    }
                 }
             }
 
         if (holder is ReceiveViewHolder)
             holder.mBinding.apply {
+
+                ivFeeling.setImageResource(reactionList[message.feeling])
 
                 (this.root.context as GroupChatActivity).firebaseDatabase.reference
                     .child(FirebaseUtils.USERS)
@@ -175,12 +186,32 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     tvReceivedMessage.text = message.message
                 }
 
-                root.setOnTouchListener { p0, p1 ->
+                ivFeeling.setOnTouchListener { p0, p1 ->
                     popup.onTouch(p0!!, p1!!)
                     false
                 }
-            }
 
+                if (!message.message.equals("This message was deleted.", true)) {
+
+                    root.setOnLongClickListener {
+
+                        AlertDialog.Builder(it.context)
+                            .setTitle("Delete message?")
+                            .setPositiveButton("Delete For Me") { dialogInterface, i ->
+                                FirebaseDatabase.getInstance().reference
+                                    .child(FirebaseUtils.PUBLIC)
+                                    .child(message.messageId)
+                                    .removeValue()
+                            }
+                            .setNegativeButton("Cancel") { dialogInterface, i ->
+                                dialogInterface.dismiss()
+                            }
+                            .show()
+                        true
+                    }
+
+                }
+            }
     }
 
     override fun getItemCount(): Int {

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.vijay.chatie.databinding.ItemStatusBinding
+import com.developer.vijay.chatie.utils.Constants
 import com.developer.vijay.chatie.utils.GeneralFunctions
 import omari.hamza.storyview.StoryView
 import omari.hamza.storyview.callback.StoryClickListeners
@@ -19,13 +20,7 @@ class StatusAdapter :
         RecyclerView.ViewHolder(mBinding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatusViewHolder {
-        return StatusViewHolder(
-            ItemStatusBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
+        return StatusViewHolder(ItemStatusBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: StatusViewHolder, position: Int) {
@@ -34,20 +29,30 @@ class StatusAdapter :
 
         holder.mBinding.apply {
 
+            tvUsername.text = userStatus.name
+
+            val calendar = Calendar.getInstance().apply {
+                timeInMillis = userStatus.lastUpdated
+            }
+
+            tvTime.text = GeneralFunctions.getDay(calendar.get(Calendar.DAY_OF_WEEK)).plus(", ").plus(Constants.simpleTimeFormat.format(calendar.time))
+
             if (userStatus.statuses.isNotEmpty())
-                GeneralFunctions.loadImage(
-                    root.context,
-                    userStatus.statuses[userStatus.statuses.size - 1].imageUrl,
-                    ivThumb
-                )
+                GeneralFunctions.loadImage(root.context, userStatus.statuses[userStatus.statuses.size - 1].imageUrl, ivThumb)
 
             csvStatus.setPortionsCount(userStatus.statuses.size)
 
-            rlStatus.setOnClickListener {
+            clStatus.setOnClickListener {
 
                 val myStories = arrayListOf<MyStory>()
-                for (status in userStatus.statuses)
-                    myStories.add(MyStory(status.imageUrl))
+                for (status in userStatus.statuses) {
+                    val innerCalendar = Calendar.getInstance().apply {
+                        timeInMillis = status.timeStamp
+                    }
+
+                    val subTitle = GeneralFunctions.getDay(innerCalendar.get(Calendar.DAY_OF_WEEK)).plus(", ").plus(Constants.simpleTimeFormat.format(innerCalendar.time))
+                    myStories.add(MyStory(status.imageUrl, Date(status.timeStamp), subTitle))
+                }
 
                 StoryView.Builder((holder.mBinding.root.context as HomeActivity).supportFragmentManager)
                     .setStoriesList(myStories) // Required

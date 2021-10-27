@@ -5,7 +5,9 @@ import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
+import android.view.LayoutInflater
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.TransitionOptions
@@ -17,6 +19,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.developer.vijay.chatie.R
+import com.developer.vijay.chatie.databinding.DialogShowImageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +27,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 object GeneralFunctions {
+
     fun loadImage(context: Context, imageUrl: String, imageView: ImageView, placeHolderResourceId: Int = R.drawable.avatar) {
 //        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
         Glide.with(context).load(imageUrl)
@@ -91,5 +95,27 @@ object GeneralFunctions {
             }
         }
         return false
+    }
+
+    fun showImageInDialog(context: Context, imageUrl: String) {
+
+        val view = DialogShowImageBinding.inflate(LayoutInflater.from(context))
+
+        loadImage(context, imageUrl, view.ivProfilePic)
+
+        val alertDialog = AlertDialog.Builder(context)
+            .setView(view.root)
+            .setCancelable(true)
+            .create()
+            .apply {
+                window?.apply {
+                    setBackgroundDrawableResource(android.R.color.transparent)
+                    setWindowAnimations(R.style.ImageDialogTheme)
+                }
+            }
+
+        view.ivDismiss.setOnClickListener { alertDialog.dismiss() }
+
+        alertDialog.show()
     }
 }

@@ -32,6 +32,7 @@ object FirebaseUtils {
     const val IMAGE = "Image"
     const val PRESENCE = "presence"
     const val PUBLIC = "public"
+    const val GROUPCHATS = "GroupChats"
 
     fun sendNotification(context: Context, name: String, message: String, token: String) {
         try {

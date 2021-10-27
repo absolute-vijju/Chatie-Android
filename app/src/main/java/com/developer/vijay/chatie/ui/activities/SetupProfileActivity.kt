@@ -1,20 +1,16 @@
 package com.developer.vijay.chatie.ui.activities
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivitySetupProfileBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
 import com.developer.vijay.chatie.utils.*
-import com.google.firebase.storage.StorageException
-import com.google.firebase.storage.StorageMetadata
 import timber.log.Timber
-import java.io.File
 
 class SetupProfileActivity : BaseActivity() {
 
@@ -26,10 +22,17 @@ class SetupProfileActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
-        if (intent.getBooleanExtra(Constants.IS_FIRST_TIME, true))
+        if (intent.getBooleanExtra(Constants.IS_FIRST_TIME, true)) {
+            supportActionBar?.apply {
+                title = "Create Profile"
+                setDisplayHomeAsUpEnabled(false)
+            }
             mBinding.btnSetupProfile.text = getString(R.string.setup_profile)
-        else {
-
+        } else {
+            supportActionBar?.apply {
+                title = "Edit Profile"
+                setDisplayHomeAsUpEnabled(true)
+            }
             PrefUtils.getUser()?.apply {
                 currentUser = this
                 GeneralFunctions.loadImage(applicationContext, profileImage, mBinding.ivUser)
@@ -73,6 +76,11 @@ class SetupProfileActivity : BaseActivity() {
                 currentUser?.let { updateProfile(name) }
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return super.onOptionsItemSelected(item)
     }
 
     private fun updateProfile(name: String) {
