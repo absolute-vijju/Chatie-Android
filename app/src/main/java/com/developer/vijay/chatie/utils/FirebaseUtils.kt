@@ -1,11 +1,18 @@
 package com.developer.vijay.chatie.utils
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.view.View
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import org.json.JSONObject
 import timber.log.Timber

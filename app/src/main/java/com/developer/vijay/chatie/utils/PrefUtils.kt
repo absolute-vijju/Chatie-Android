@@ -29,4 +29,8 @@ object PrefUtils {
         sharedPreferences.getString(key, defaultValue)
     }
 
+    fun clear() {
+        sharedPreferences.edit().clear().apply()
+    }
+
 }

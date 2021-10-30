@@ -25,6 +25,7 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = arrayListOf<Message>()
     private val reactionList = intArrayOf(
+        R.drawable.ic_add_reaction,
         R.drawable.ic_fb_like,
         R.drawable.ic_fb_love,
         R.drawable.ic_fb_laugh,

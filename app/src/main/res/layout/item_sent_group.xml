@@ -25,7 +25,7 @@
             android:paddingTop="5dp"
             android:paddingEnd="5dp"
             android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             tools:text="Vijay Koshti" />
 

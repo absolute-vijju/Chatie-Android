@@ -27,6 +27,7 @@ class HomeActivity : BaseActivity() {
 
         setupTab()
         init()
+        getBackgroundFromFirebase(mBinding.viewPager)
         setDeviceToken()
 
     }
@@ -92,7 +93,7 @@ class HomeActivity : BaseActivity() {
                 if (showBackgroundImage) {
                     Glide.with(this).load(backgroundImageUrl).into(object : CustomTarget<Drawable>() {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            mBinding.ivBackground.background = resource
+                            mBinding.viewPager.background = resource
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
@@ -101,7 +102,7 @@ class HomeActivity : BaseActivity() {
 
                     })
                 } else {
-                    mBinding.ivBackground.setBackgroundColor(Color.parseColor(backgroundColor))
+                    mBinding.viewPager.setBackgroundColor(Color.parseColor(backgroundColor))
                 }
             } else
                 it.exception?.message?.let { it1 -> showToast(it1) }

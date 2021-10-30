@@ -2,15 +2,17 @@ package com.developer.vijay.chatie.utils
 
 import android.app.Dialog
 import android.app.ProgressDialog
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
+import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.DialogProgressBinding
 import com.developer.vijay.chatie.models.User
@@ -42,6 +44,32 @@ open class BaseActivity : AppCompatActivity() {
         }
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings.build())
 
+    }
+
+    fun getBackgroundFromFirebase(view: View) {
+        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener {
+            if (it.isSuccessful) {
+                val backgroundImageUrl = firebaseRemoteConfig.getString(FirebaseUtils.BACKGROUND_IMAGE_URL)
+                val backgroundColor = firebaseRemoteConfig.getString(FirebaseUtils.BACKGROUND_COLOR)
+                val showBackgroundImage = firebaseRemoteConfig.getBoolean(FirebaseUtils.SHOW_BACKGROUND_IMAGE)
+
+                if (showBackgroundImage) {
+                    Glide.with(this).load(backgroundImageUrl).into(object : CustomTarget<Drawable>() {
+                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                            view.background = resource
+                        }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {
+
+                        }
+
+                    })
+                } else {
+                    view.setBackgroundColor(Color.parseColor(backgroundColor))
+                }
+            } else
+                it.exception?.message?.let { it1 -> showToast(it1) }
+        }
     }
 
     fun showProgressDialog(message: String) {

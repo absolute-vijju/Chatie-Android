@@ -5,15 +5,15 @@
     <item
         android:id="@+id/mSearch"
         android:icon="@drawable/ic_search"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="always" />
     <item
         android:id="@+id/mGroup"
-        android:title="Groups" />
+        android:title="@string/public_group" />
     <item
         android:id="@+id/mInvite"
-        android:title="Invite" />
+        android:title="@string/invite" />
     <item
         android:id="@+id/mSetting"
-        android:title="Settings" />
+        android:title="@string/settings" />
 </menu>

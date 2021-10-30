@@ -1,6 +1,7 @@
 package com.developer.vijay.chatie.ui.activities.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.vijay.chatie.R
@@ -13,7 +14,7 @@ import com.developer.vijay.chatie.utils.GeneralFunctions
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
-class UserAdapter(val onClick: (viewId: Int, position: Int) -> Unit) :
+class UserAdapter(val onClick: (view: View, position: Int) -> Unit) :
     RecyclerView.Adapter<UserAdapter.ConversionViewHolder>() {
 
     private var userList = arrayListOf<User>()
@@ -63,8 +64,8 @@ class UserAdapter(val onClick: (viewId: Int, position: Int) -> Unit) :
         }
 
         holder.apply {
-            mBinding.root.setOnClickListener { onClick(0, position) }
-            mBinding.ivProfilePic.setOnClickListener { onClick(R.id.ivProfilePic, position) }
+            mBinding.root.setOnClickListener { onClick(mBinding.root, position) }
+            mBinding.ivProfilePic.setOnClickListener { onClick(mBinding.ivProfilePic, position) }
 
             mBinding.tvUsername.text = user.name
             GeneralFunctions.loadImage(

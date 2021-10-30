@@ -1,11 +1,10 @@
 package com.developer.vijay.chatie.ui.activities.chat
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.developer.vijay.chatie.R
@@ -13,14 +12,12 @@ import com.developer.vijay.chatie.databinding.ItemReceiveBinding
 import com.developer.vijay.chatie.databinding.ItemSentBinding
 import com.developer.vijay.chatie.utils.FirebaseUtils
 import com.developer.vijay.chatie.utils.GeneralFunctions
-import com.developer.vijay.chatie.utils.showToast
 import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
 
-class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(private val onClick: (view: View, imageUrl: String) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = arrayListOf<Message>()
     private val reactionList = intArrayOf(
@@ -155,6 +152,12 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         }
                     }
                 }
+
+                root.setOnClickListener {
+                    if (message.message.equals(FirebaseUtils.IMAGE, true)) {
+                        onClick(root, message.imageUrl)
+                    }
+                }
             }
 
         if (holder is ReceiveViewHolder)
@@ -196,6 +199,12 @@ class MessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             }
                             .show()
                         true
+                    }
+                }
+
+                root.setOnClickListener {
+                    if (message.message.equals(FirebaseUtils.IMAGE, true)) {
+                        onClick(root, message.imageUrl)
                     }
                 }
             }

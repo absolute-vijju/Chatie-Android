@@ -6,6 +6,8 @@ import com.developer.vijay.chatie.databinding.ActivityPhoneNumberBinding
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
 import com.developer.vijay.chatie.ui.activities.otp.OtpActivity
 import com.developer.vijay.chatie.utils.BaseActivity
+import com.developer.vijay.chatie.utils.Constants
+import com.developer.vijay.chatie.utils.PrefUtils
 
 class PhoneNumberActivity : BaseActivity() {
 
@@ -15,7 +17,7 @@ class PhoneNumberActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
-        if (firebaseAuth.uid != null) {
+        if (PrefUtils.getUser() != null) {
             startActivity(Intent(this, HomeActivity::class.java)).apply {
                 finish()
             }
@@ -26,7 +28,7 @@ class PhoneNumberActivity : BaseActivity() {
 
         mBinding.btnContinue.setOnClickListener {
             Intent(this, OtpActivity::class.java).apply {
-                putExtra("key_phone_number", mBinding.etPhoneNumber.text.toString())
+                putExtra(Constants.KEY_PHONE_NUMBER, mBinding.etPhoneNumber.text.trim().toString())
                 startActivity(this)
             }
         }

@@ -1,15 +1,25 @@
 package com.developer.vijay.chatie.ui.activities
 
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivitySetupProfileBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
+import com.developer.vijay.chatie.ui.activities.view_image.ViewImageActivity
 import com.developer.vijay.chatie.utils.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
 
 class SetupProfileActivity : BaseActivity() {
@@ -17,27 +27,49 @@ class SetupProfileActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySetupProfileBinding.inflate(layoutInflater) }
     private var selectedImageURI: Uri? = null
     private var currentUser: User? = null
+    private var isFirstTime = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
-        if (intent.getBooleanExtra(Constants.IS_FIRST_TIME, true)) {
+        isFirstTime = intent.getBooleanExtra(Constants.IS_FIRST_TIME, true)
+
+        if (isFirstTime) {
             supportActionBar?.apply {
                 title = "Create Profile"
                 setDisplayHomeAsUpEnabled(false)
+                setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@SetupProfileActivity, R.color.green)))
             }
             mBinding.btnSetupProfile.text = getString(R.string.setup_profile)
         } else {
             supportActionBar?.apply {
                 title = "Edit Profile"
                 setDisplayHomeAsUpEnabled(true)
+                setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this@SetupProfileActivity, R.color.green)))
             }
+
             PrefUtils.getUser()?.apply {
-                currentUser = this
-                GeneralFunctions.loadImage(applicationContext, profileImage, mBinding.ivUser)
-                mBinding.etUserName.setText(name)
-                selectedImageURI = Uri.parse(this.profileImage)
+
+                firebaseDatabase.reference
+                    .child(FirebaseUtils.USERS)
+                    .child(uid)
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.getValue(User::class.java)?.let {
+                                currentUser = it
+                                GeneralFunctions.loadImage(applicationContext, it.profileImage, mBinding.ivUser)
+                                mBinding.etUserName.setText(it.name)
+                                selectedImageURI = Uri.parse(it.profileImage)
+                                PrefUtils.setUser(it)
+                            }
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+
+                        }
+                    })
             }
             mBinding.btnSetupProfile.text = getString(R.string.save)
         }
@@ -51,6 +83,15 @@ class SetupProfileActivity : BaseActivity() {
             }
 
         mBinding.ivUser.setOnClickListener {
+            currentUser?.apply {
+                val intent = Intent(this@SetupProfileActivity, ViewImageActivity::class.java).apply { putExtra(FirebaseUtils.IMAGE, profileImage) }
+                val transitionName = getString(R.string.transition_name)
+                val activityOption = ActivityOptionsCompat.makeSceneTransitionAnimation(this@SetupProfileActivity, mBinding.ivUser, transitionName)
+                ActivityCompat.startActivity(this@SetupProfileActivity, intent, activityOption.toBundle())
+            }
+        }
+
+        mBinding.ivAddImage.setOnClickListener {
             pickImageContract.launch("image/*")
         }
 
@@ -78,8 +119,31 @@ class SetupProfileActivity : BaseActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (!isFirstTime)
+            menuInflater.inflate(R.menu.menu_logout, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
+        when (item.itemId) {
+            R.id.mLogout -> {
+                AlertDialog.Builder(this)
+                    .setTitle("Logout")
+                    .setMessage("Are you sure?")
+                    .setPositiveButton("Yes") { dialogInterface, i ->
+                        PrefUtils.clear()
+                        startActivity(Intent(this, PhoneNumberActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        })
+                    }
+                    .setNegativeButton("No") { dialogInterface, i ->
+                        dialogInterface.dismiss()
+                    }
+                    .show()
+            }
+            else -> finish()
+        }
         return super.onOptionsItemSelected(item)
     }
 
