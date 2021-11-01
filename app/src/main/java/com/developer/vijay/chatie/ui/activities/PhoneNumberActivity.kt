@@ -17,7 +17,7 @@ class PhoneNumberActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
-        if (PrefUtils.getUser() != null) {
+        if (firebaseAuth.uid != null) {
             startActivity(Intent(this, HomeActivity::class.java)).apply {
                 finish()
             }

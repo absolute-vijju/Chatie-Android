@@ -133,9 +133,11 @@ class SetupProfileActivity : BaseActivity() {
                     .setMessage("Are you sure?")
                     .setPositiveButton("Yes") { dialogInterface, i ->
                         PrefUtils.clear()
+                        firebaseAuth.signOut()
                         startActivity(Intent(this, PhoneNumberActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                         })
+                        finishAffinity()
                     }
                     .setNegativeButton("No") { dialogInterface, i ->
                         dialogInterface.dismiss()
