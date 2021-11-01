@@ -36,7 +36,8 @@
         <activity
             android:name=".ui.activities.home.HomeActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.activities.PhoneNumberActivity"
             android:exported="true"

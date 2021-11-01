@@ -8,16 +8,17 @@ import com.developer.vijay.chatie.ui.activities.call.CallFragment
 import com.developer.vijay.chatie.ui.activities.chat.ChatFragment
 import com.developer.vijay.chatie.ui.activities.status.StatusFragment
 
-class PagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
+class PagerAdapter(val fragmentList: List<Fragment>, fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 3
     }
 
     override fun createFragment(position: Int): Fragment {
-        if (position == 0)
+        return fragmentList[position]
+        /*if (position == 0)
             return ChatFragment()
         if (position == 1)
             return StatusFragment()
-        return CallFragment()
+        return CallFragment()*/
     }
 }

@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
+import androidx.appcompat.widget.SearchView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -13,13 +15,19 @@ import com.bumptech.glide.request.transition.Transition
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivityHomeBinding
 import com.developer.vijay.chatie.ui.activities.SetupProfileActivity
+import com.developer.vijay.chatie.ui.activities.call.CallFragment
+import com.developer.vijay.chatie.ui.activities.chat.ChatFragment
 import com.developer.vijay.chatie.ui.activities.group_chat.GroupChatActivity
+import com.developer.vijay.chatie.ui.activities.status.StatusFragment
 import com.developer.vijay.chatie.utils.*
 import com.google.android.material.tabs.TabLayout
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : BaseActivity(), SearchView.OnQueryTextListener {
 
     private val mBinding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
+    private val fragmentList = arrayListOf(ChatFragment(), StatusFragment(), CallFragment())
+    private val pagerAdapter by lazy { PagerAdapter(fragmentList, supportFragmentManager, lifecycle) }
+    private var currentPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +43,7 @@ class HomeActivity : BaseActivity() {
     private fun setupTab() {
 
         mBinding.viewPager.apply {
-            adapter = PagerAdapter(supportFragmentManager, lifecycle)
+            adapter = pagerAdapter
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     mBinding.tabLayout.selectTab(mBinding.tabLayout.getTabAt(position))
@@ -52,6 +60,7 @@ class HomeActivity : BaseActivity() {
             addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.let {
+                        currentPosition = it.position
                         mBinding.viewPager.currentItem = it.position
                     }
                 }
@@ -112,7 +121,7 @@ class HomeActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mSearch -> {
-                showToast("Coming soon...")
+
             }
             R.id.mGroup -> {
                 startActivity(Intent(this, GroupChatActivity::class.java))
@@ -129,8 +138,35 @@ class HomeActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private var searchView: SearchView? = null
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.topmenu, menu)
+        val search = menu?.findItem(R.id.mSearch)
+        searchView = search?.actionView as? SearchView
+        searchView?.apply {
+            isSubmitButtonEnabled = true
+            setOnQueryTextListener(this@HomeActivity)
+            queryHint = "type friend name..."
+            imeOptions = EditorInfo.IME_ACTION_SEARCH
+        }
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (currentPosition == 0) {
+            val chatFragment = fragmentList[0] as ChatFragment
+            query?.let { chatFragment.searchInData(it) }
+        }
+        hideKeyboard()
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (currentPosition == 0) {
+            val chatFragment = fragmentList[0] as ChatFragment
+            query?.let { chatFragment.searchInData(it) }
+        }
+        return true
     }
 }

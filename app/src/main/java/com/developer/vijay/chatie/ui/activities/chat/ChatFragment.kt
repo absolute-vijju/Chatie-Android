@@ -1,29 +1,27 @@
 package com.developer.vijay.chatie.ui.activities.chat
 
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.FragmentChatBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.home.UserAdapter
 import com.developer.vijay.chatie.ui.activities.view_image.ViewImageActivity
-import com.developer.vijay.chatie.utils.*
+import com.developer.vijay.chatie.utils.BaseActivity
+import com.developer.vijay.chatie.utils.Constants
+import com.developer.vijay.chatie.utils.FirebaseUtils
+import com.developer.vijay.chatie.utils.PrefUtils
 import com.google.gson.Gson
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private val mBinding: FragmentChatBinding by lazy { FragmentChatBinding.bind(requireView()) }
-    private val userList = arrayListOf<User>()
+    private var userList = arrayListOf<User>()
     private val userAdapter by lazy {
         UserAdapter { view, position ->
             when (view.id) {
@@ -59,5 +57,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             mBinding.rvUsers.hideShimmerAdapter()
             userAdapter.setData(userList)
         }
+    }
+
+    fun searchInData(query: String) {
+        val newList = arrayListOf<User>()
+        for (user in userList) {
+            if (user.name.lowercase().contains(query.lowercase()))
+                newList.add(user)
+        }
+
+        if (query.isEmpty() && newList.isEmpty())
+            userAdapter.setData(userList)
+        else
+            userAdapter.setData(newList)
     }
 }
