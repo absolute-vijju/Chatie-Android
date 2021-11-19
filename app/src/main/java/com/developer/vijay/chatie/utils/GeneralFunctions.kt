@@ -2,10 +2,14 @@ package com.developer.vijay.chatie.utils
 
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
+import android.app.DownloadManager
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
+import android.net.Uri
+import android.os.Environment
 import android.view.LayoutInflater
+import android.webkit.CookieManager
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -117,5 +121,22 @@ object GeneralFunctions {
         view.ivDismiss.setOnClickListener { alertDialog.dismiss() }
 
         alertDialog.show()
+    }
+
+    fun downloadImage(context: Context, imageUrl: String) {
+        val cookie = CookieManager.getInstance().getCookie(imageUrl)
+
+        val downloadRequest = DownloadManager.Request(Uri.parse(imageUrl)).apply {
+            setTitle("Image")
+            setDescription("Image")
+            addRequestHeader("cookie", cookie)
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${System.currentTimeMillis()}.jpg")
+        }
+
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.enqueue(downloadRequest)
+
+        (context as AppCompatActivity).showToast("Downloading started.")
     }
 }
