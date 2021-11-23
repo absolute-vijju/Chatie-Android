@@ -1,25 +1,22 @@
 package com.developer.vijay.chatie.utils
 
 import android.app.ActivityManager
-import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.DownloadManager
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.webkit.CookieManager
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.bumptech.glide.TransitionOptions
 import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.developer.vijay.chatie.R
@@ -139,4 +136,21 @@ object GeneralFunctions {
 
         (context as AppCompatActivity).showToast("Downloading started.")
     }
+
+    fun createImageURI(context: Context): Uri? {
+        val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        else
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+        val imageName = System.currentTimeMillis()
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        return context.contentResolver.insert(imageCollection, contentValues)
+    }
+
 }

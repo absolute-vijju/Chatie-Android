@@ -179,33 +179,19 @@ class ChatActivity : BaseActivity() {
         val permissionContract = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
             resultMap.entries.forEach { entry ->
                 if (entry.value) {
-                    createImageURI()?.let { takePhotoContract.launch(it) }
+                    resultUri = GeneralFunctions.createImageURI(this)
+                    resultUri?.let { takePhotoContract.launch(resultUri) }
                 }
             }
         }
 
         mBinding.ivCamera.setOnClickListener {
-            permissionContract.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            if (Build.VERSION.SDK_INT >= 29) {
+                resultUri = GeneralFunctions.createImageURI(this)
+                resultUri?.let { takePhotoContract.launch(resultUri) }
+            } else
+                permissionContract.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }
-    }
-
-    private fun createImageURI(): Uri? {
-
-        val imageCollection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        else
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-
-        val imageName = System.currentTimeMillis()
-
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "$imageName")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
-
-        val finalURI = contentResolver.insert(imageCollection, contentValues)
-        resultUri = finalURI
-        return finalURI
     }
 
     private fun sendImageMessage(message: Message, imageUri: Uri) {
