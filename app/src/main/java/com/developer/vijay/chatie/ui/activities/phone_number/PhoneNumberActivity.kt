@@ -1,4 +1,4 @@
-package com.developer.vijay.chatie.ui.activities
+package com.developer.vijay.chatie.ui.activities.phone_number
 
 import android.content.Intent
 import android.os.Bundle

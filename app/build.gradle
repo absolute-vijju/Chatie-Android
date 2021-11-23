@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.github.3llomi:CircularStatusView:V1.0.2'
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     // Status like whatsapp
     implementation 'com.github.OMARIHAMZA:StoryView:1.0.2-alpha'
@@ -95,12 +95,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Okhttp
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
 
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1'
     // Coroutine Lifecycle Scope
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 
     // Volley
     implementation 'com.android.volley:volley:1.2.1'

@@ -30,7 +30,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activities.SetupProfileActivity"
+            android:name=".ui.activities.setup_profile.SetupProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
@@ -39,7 +39,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.activities.PhoneNumberActivity"
+            android:name=".ui.activities.phone_number.PhoneNumberActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible">

@@ -2,6 +2,7 @@ package com.developer.vijay.chatie.ui.activities.group_chat
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -9,12 +10,16 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.*
+import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivityGroupChatBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.chat.Message
+import com.developer.vijay.chatie.ui.activities.view_image.ViewImageActivity
 import com.developer.vijay.chatie.utils.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,7 +28,14 @@ import java.util.*
 class GroupChatActivity : BaseActivity() {
 
     private val mBinding by lazy { ActivityGroupChatBinding.inflate(layoutInflater) }
-    private val groupMessageAdapter by lazy { GroupMessageAdapter() }
+    private val groupMessageAdapter by lazy {
+        GroupMessageAdapter { view, imageUrl ->
+            val intent = Intent(this, ViewImageActivity::class.java).apply { putExtra(FirebaseUtils.IMAGE, imageUrl) }
+            val transitionName = getString(R.string.transition_name)
+            val activityOption = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName)
+            ActivityCompat.startActivity(this, intent, activityOption.toBundle())
+        }
+    }
     private val messageList = arrayListOf<Message>()
 
     private var currentUser: User? = null

@@ -3,7 +3,7 @@ package com.developer.vijay.chatie.ui.activities.otp
 import android.content.Intent
 import android.os.Bundle
 import com.developer.vijay.chatie.databinding.ActivityOtpBinding
-import com.developer.vijay.chatie.ui.activities.SetupProfileActivity
+import com.developer.vijay.chatie.ui.activities.setup_profile.SetupProfileActivity
 import com.developer.vijay.chatie.utils.BaseActivity
 import com.developer.vijay.chatie.utils.Constants
 import com.developer.vijay.chatie.utils.showToast

@@ -14,7 +14,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivityHomeBinding
-import com.developer.vijay.chatie.ui.activities.SetupProfileActivity
+import com.developer.vijay.chatie.ui.activities.setup_profile.SetupProfileActivity
 import com.developer.vijay.chatie.ui.activities.call.CallFragment
 import com.developer.vijay.chatie.ui.activities.chat.ChatFragment
 import com.developer.vijay.chatie.ui.activities.group_chat.GroupChatActivity

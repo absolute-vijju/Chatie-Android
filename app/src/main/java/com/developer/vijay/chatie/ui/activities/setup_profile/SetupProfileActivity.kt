@@ -1,4 +1,4 @@
-package com.developer.vijay.chatie.ui.activities
+package com.developer.vijay.chatie.ui.activities.setup_profile
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -15,6 +15,7 @@ import com.developer.vijay.chatie.R
 import com.developer.vijay.chatie.databinding.ActivitySetupProfileBinding
 import com.developer.vijay.chatie.models.User
 import com.developer.vijay.chatie.ui.activities.home.HomeActivity
+import com.developer.vijay.chatie.ui.activities.phone_number.PhoneNumberActivity
 import com.developer.vijay.chatie.ui.activities.view_image.ViewImageActivity
 import com.developer.vijay.chatie.utils.*
 import com.google.firebase.database.DataSnapshot

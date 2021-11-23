@@ -2,6 +2,7 @@ package com.developer.vijay.chatie.ui.activities.group_chat
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
@@ -21,7 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GroupMessageAdapter(private val onClick: (view: View, imageUrl: String) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = arrayListOf<Message>()
     private val reactionList = intArrayOf(
@@ -156,6 +157,13 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         }
                     }
                 }
+
+                root.setOnClickListener {
+                    if (message.message.equals(FirebaseUtils.IMAGE, true)) {
+                        onClick(root, message.imageUrl)
+                    }
+                }
+
             }
 
         if (holder is ReceiveViewHolder)
@@ -211,6 +219,12 @@ class GroupMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         true
                     }
 
+                }
+
+                root.setOnClickListener {
+                    if (message.message.equals(FirebaseUtils.IMAGE, true)) {
+                        onClick(root, message.imageUrl)
+                    }
                 }
             }
     }
