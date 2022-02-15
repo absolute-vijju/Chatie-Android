@@ -24,13 +24,13 @@ Android Chat application (Fully Firebase based).
 - You can change app home screen background using firebase remote config anytime you want.
 - And many more.
 
-### Demo
+### App Demo
 
-https://www.youtube.com/watch?v=3Evk2ywVSJ0&list=PL_ZBD_veI3k5Cdyt4ie4YevsGTiLFPrhG&index=9&ab_channel=DeveloperVijay
+https://www.youtube.com/watch?v=IyYlLas2PNc&list=PL_ZBD_veI3k5qeklUYolOKXrd8U4MfyDb&ab_channel=DeveloperVijay
 
-### Setup
+### How to Setup with Firebase
 
-https://www.youtube.com/watch?v=3Evk2ywVSJ0&list=PL_ZBD_veI3k5Cdyt4ie4YevsGTiLFPrhG&index=9&ab_channel=DeveloperVijay
+https://www.youtube.com/watch?v=CPTRMX0Y94Q&list=PL_ZBD_veI3k5qeklUYolOKXrd8U4MfyDb&index=2&ab_channel=DeveloperVijay
 
 ## Contribute
 1. Fork the the project
