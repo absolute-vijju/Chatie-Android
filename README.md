@@ -41,4 +41,4 @@ https://www.youtube.com/watch?v=3Evk2ywVSJ0&list=PL_ZBD_veI3k5Cdyt4ie4YevsGTiLFP
 
 # Created by
 
-[@absolute-vijju](https://www.github.com/absolute-vijju)
+[Vijay Koshti](https://github.com/absolute-vijju) ([@absolute_vijju](https://www.twitter.com/absolute_vijju))
